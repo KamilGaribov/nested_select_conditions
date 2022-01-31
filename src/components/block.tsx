@@ -55,6 +55,13 @@ export const Block = (props: BlockProps) => {
   const [result, setResult] = useState("undefined");
   const { args, data2, parent, updateParent2 } = props;
   const [data, setData] = useState<IOption>(data2 ? data2 : initialData);
+  useEffect(() => {
+    if (parent) {
+      updateParent2!(data);
+    } else {
+      setResult(data.value);
+    }
+  }, [data]);
   const handleSelect = (value: string) => {
     let updatedData: IOption;
     if (value === "undefined") {
@@ -91,6 +98,13 @@ export const Block = (props: BlockProps) => {
     }
     setData(updatedData);
   };
+  const handleChangeArgument = (arg: string) => {
+    let parsedArg = JSON.parse(arg);
+    setData({ ...data, value: parsedArg.value, argument: parsedArg });
+  };
+  const handleChangeConstant = (item: IOption) => {
+    setData(item);
+  };
   const addChild = () => {
     if (data.children) {
       setData({
@@ -107,13 +121,6 @@ export const Block = (props: BlockProps) => {
         ],
       });
     }
-  };
-  const handleChangeArgument = (arg: string) => {
-    let parsedArg = JSON.parse(arg);
-    setData({ ...data, value: parsedArg.value, argument: parsedArg });
-  };
-  const handleChangeConstant = (item: IOption) => {
-    setData(item);
   };
   const updateParent = (child: IOption) => {
     let newData: IOption = {
@@ -136,13 +143,6 @@ export const Block = (props: BlockProps) => {
     newData.value = valueFromChildren(newData);
     setData(newData);
   };
-  useEffect(() => {
-    if (!parent) {
-      setResult(data.value);
-    } else {
-      updateParent2!(data);
-    }
-  }, [data]);
 
   return (
     <div className="block">

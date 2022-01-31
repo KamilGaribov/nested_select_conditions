@@ -51,8 +51,10 @@ export const ArgumentSelect = (props: IArgumentSelectProps) => {
   });
   useEffect(() => {
     let updatedArg: IArgument = args.find((arg) => arg.id === argument.id)!;
-    handleChange(JSON.stringify(updatedArg));
-    setArgument(updatedArg);
+    if (argument.value !== updatedArg.value) {
+      handleChange(JSON.stringify(updatedArg));
+      setArgument(updatedArg);
+    }
   }, [args]);
   return (
     <select
